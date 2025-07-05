@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attribute Bars</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdfdfd;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .text{
+        font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      text-align: left;
+      justify-content: center;
+    }
+
+    .text span{
+        text-decoration-color: #1a1830;
+        font-weight: bold;
+    }
+
+    .input-section {
+      margin-bottom: 30px;
+    }
+
+    .input-section input {
+      padding: 8px;
+      font-size: 16px;
+      width: 200px;
+    }
+
+    .attribute {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+      gap: 10px;
+    }
+
+    .attribute label {
+      width: 50px;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .arrow {
+      cursor: pointer;
+      font-size: 20px;
+      user-select: none;
+    }
+
+    .bars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .bar {
+      width: 20px;
+      height: 30px;
+      border: 3px solid #1a1830;
+      background-color: rgb(199, 200, 255);
+    }
+
+    .bar.filled {
+      background-color: #1e1c69;
+    }
+
+    #export-section {
+  padding: 30px;
+  background-color: white; /* Ensures clean white background in export */
+  display: inline-block;   /* Prevents it from stretching full width */
+  border: 1px solid #ccc;  /* Optional: adds a faint border */
+  border-radius: 10px;     /* Optional: rounded corners */
+}
+  </style>
+</head>
+<body>
+  <div id="export-section">
+  <div class="input-section">
+    <label for="name">NAME INPUT:</label>
+    <input type="text" id="name" placeholder="Enter name...">
+  </div>
+
+  <div class="attribute" data-type="IQ">
+    <label>IQ:</label>
+    <span class="arrow" onclick="changeBars('IQ', -1)">&#9664;</span>
+    <div class="bars" id="IQ-bars"></div>
+    <span class="arrow" onclick="changeBars('IQ', 1)">&#9654;</span>
+  </div>
+
+  <div class="attribute" data-type="EQ">
+    <label>EQ:</label>
+    <span class="arrow" onclick="changeBars('EQ', -1)">&#9664;</span>
+    <div class="bars" id="EQ-bars"></div>
+    <span class="arrow" onclick="changeBars('EQ', 1)">&#9654;</span>
+  </div>
+
+  <div class="attribute" data-type="SQ">
+    <label>SQ:</label>
+    <span class="arrow" onclick="changeBars('SQ', -1)">&#9664;</span>
+    <div class="bars" id="SQ-bars"></div>
+    <span class="arrow" onclick="changeBars('SQ', 1)">&#9654;</span>
+  </div>
+
+  <div class="attribute" data-type="AQ">
+    <label>AQ:</label>
+    <span class="arrow" onclick="changeBars('AQ', -1)">&#9664;</span>
+    <div class="bars" id="AQ-bars"></div>
+    <span class="arrow" onclick="changeBars('AQ', 1)">&#9654;</span>
+  </div>
+  </div>
+  <button onclick="downloadAsImage()">Download as JPG</button>
+
+  <div class="text">
+    <t><span>1. Kvocijent inteligencije (IQ)</span>
+        Ovo je mera vašeg nivoa razumevanja. Potreban vam je IQ za rešavanje matematike, pamćenje stvari i pamćenje lekcija.</t>
+    <br>
+    <t><span>2. Emocionalni koeficijent (EQ)</span>
+    Ovo je mera vaše sposobnosti da održite mir s drugima, da održavate vreme, da budete odgovorni, da budete pošteni, da poštujete granice, da budete skromni, iskreni i pažljivi.</t>
+    <br>
+    <t><span>3. Socijalni koeficijent (SQ)</span>
+        Ovo je mera vaše sposobnosti da izgradite mrežu prijatelja i održavate je tokom dužeg vremenskog perioda.
+    </t>
+    <br>
+    <t>
+        <span>4. Koeficijent otpornosti (AQ):</span> Mera vaše sposobnosti da prođete kroz težak period u životu i izađete iz njega bez gubitka razuma.
+    Kada se suoči sa nedaćama, AQ odlučuje ko će odustati, ko će napustiti svoju porodicu, a ko će razmišljati o samoubistvu.
+    </t>
+    <br>
+    <t>
+        Ljudi koji imaju viši EQ i SQ imaju tendenciju da idu dalje u životu od onih sa visokim IQ, ali niskim EQ i SQ. Većina škola profitira od poboljšanja IQ-a, dok su EQ i SQ sniženi.
+        Čovjeka s visokim IQ-om može na kraju zaposliti čovjek s visokim EQ i SQ čak i ako ima prosječan IQ.
+        Vaš EQ predstavlja vaš karakter, dok vaš SQ predstavlja vašu harizmu.
+        <br>
+        Razvijte navike koje će poboljšati ova tri Q, posebno vaš EQ i SQ.
+        <br>
+        Roditelji, izložite svoju djecu drugim područjima života osim akademskim. Trebalo bi da voli fizički rad
+        (nikada rad ne koristi kao oblik kazne), sport i umjetnost.
+        <br>
+        Razvijte svoj IQ, kao i njihov EQ, SQ i AQ. Oni bi trebali postati višestruka ljudska bića sposobna da rade stvari nezavisno od svojih roditelja.
+    </t>
+  </div>
+
+  <script>
+    const maxBars = 10;
+    const values = {
+      IQ: 3,
+      EQ: 2,
+      SQ: 5,
+      AQ: 4
+    };
+
+    function renderBars(type) {
+      const container = document.getElementById(`${type}-bars`);
+      container.innerHTML = '';
+      for (let i = 0; i < maxBars; i++) {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        if (i < values[type]) {
+          bar.classList.add('filled');
+        }
+        container.appendChild(bar);
+      }
+    }
+
+    function changeBars(type, delta) {
+      values[type] = Math.min(maxBars, Math.max(0, values[type] + delta));
+      renderBars(type);
+    }
+
+    // Initial rendering
+    Object.keys(values).forEach(renderBars);
+  </script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    function downloadAsImage() {
+      const exportSection = document.getElementById("export-section");
+      const nameInput = document.getElementById("name").value.trim();
+      const fileName = nameInput !== "" ? `${nameInput}_attributes.jpg` : "attribute_bars.jpg";
+  
+      html2canvas(exportSection).then(canvas => {
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
